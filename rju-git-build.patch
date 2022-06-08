@@ -1,0 +1,63 @@
+diff --git a/cmd/Makefile b/cmd/Makefile
+index 478c4a8..542b971 100644
+--- a/cmd/Makefile
++++ b/cmd/Makefile
+@@ -11,42 +11,45 @@ AR = ar # ar llvm-ar
+ CPPFLAGS += -Wall -pedantic -O3 -g -ffast-math
+ CFLAGS += -D_POSIX_C_SOURCE=200809 -std=c99
+ CXXFLAGS +=
+-LDLIBS = r-common/c/lib-r-common.a -ljack -lpthread -lm
++rcommonlib = r-common/c/lib-r-common.a
++LDLIBS = $(rcommonlib) -ljack -lpthread -lm
+ 
+-mk-r-common:
++$(rcommonlib):
+ 	(cd r-common/c ; make)
+ 
+-all: mk-r-common $(bin)
++all: $(bin)
++
++$(bin): $(rcommonlib)
+ 
+ rju-data: rju-data.c
+-	$(CC) $(CPPFLAGS) $(CFLAGS) -o rju-data rju-data.c $(LDLIBS) -lsamplerate
++	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o rju-data rju-data.c $(LDLIBS) -lsamplerate
+ 
+ rju-dl: rju-dl.c
+-	$(CC) $(CPPFLAGS) -Wno-pedantic $(CFLAGS) -o rju-dl rju-dl.c $(LDLIBS) -ldl -llo
++	$(CC) $(CPPFLAGS) -Wno-pedantic $(CFLAGS) $(LDFLAGS) -o rju-dl rju-dl.c $(LDLIBS) -ldl -llo
+ 
+ rju-dx7: rju-dx7.cpp
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -o rju-dx7 rju-dx7.cpp $(LDLIBS) dx7/lib-dx7.a
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -o rju-dx7 rju-dx7.cpp $(LDLIBS) dx7/lib-dx7.a
+ 
+ rju-level: rju-level.c
+-	$(CC) $(CPPFLAGS) $(CFLAGS) -o rju-level rju-level.c $(LDLIBS) -lncurses -ltinfo
++	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o rju-level rju-level.c $(LDLIBS) -lncurses -ltinfo
+ 
+ rju-lxvst: rju-lxvst.cpp
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I$(VST_SDK) -o rju-lxvst rju-lxvst.cpp $(LDLIBS) -ldl -lX11 -llo
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -I$(VST_SDK) -o rju-lxvst rju-lxvst.cpp $(LDLIBS) -ldl -lX11 -llo
+ 
+ rju-play: rju-play.c
+-	$(CC) $(CPPFLAGS) $(CFLAGS) -o rju-play rju-play.c $(LDLIBS) -lsndfile -lsamplerate
++	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o rju-play rju-play.c $(LDLIBS) -lsndfile -lsamplerate
+ 
+ rju-record: rju-record.c
+-	$(CC) $(CPPFLAGS) $(CFLAGS) -o rju-record rju-record.c $(LDLIBS) -lsndfile
++	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o rju-record rju-record.c $(LDLIBS) -lsndfile
+ 
+ rju-scope: rju-scope.c
+-	$(CC) $(CPPFLAGS) $(CFLAGS) -o rju-scope rju-scope.c $(LDLIBS) -lsamplerate -lX11 -lXext -lpng
++	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o rju-scope rju-scope.c $(LDLIBS) -lsamplerate -lX11 -lXext -lpng
+ 
+ rju-transport: rju-transport.c
+-	$(CC) $(CPPFLAGS) $(CFLAGS) -o rju-transport rju-transport.c $(LDLIBS) -lncurses -ltinfo
++	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o rju-transport rju-transport.c $(LDLIBS) -lncurses -ltinfo
+ 
+ lxvst-query: lxvst-query.cpp
+-	$(CXX) $(CPPFLAGS) $(CXXFLAGS) -I$(VST_SDK) -o lxvst-query lxvst-query.cpp $(LDLIBS) -ldl
++	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(LDFLAGS) -I$(VST_SDK) -o lxvst-query lxvst-query.cpp $(LDLIBS) -ldl
+ 
+ clean:
+ 	rm -f $(bin) *.o
